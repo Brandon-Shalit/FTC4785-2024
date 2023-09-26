@@ -10,10 +10,14 @@ public class TeleOp extends OpMode
     DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
     DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
     DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+    DcMotor armMotor = hardwareMap.dcMotor.get("armMotor");
     @Override
-    public void init() {
-
+    public void init()
+    {
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+
     @Override
     public void loop() {
         double y = -gamepad1.left_stick_y;
@@ -25,5 +29,17 @@ public class TeleOp extends OpMode
         backLeftMotor.setPower((y - x + rx) / denominator);
         frontRightMotor.setPower((y - x - rx) / denominator);
         backRightMotor.setPower((y + x - rx) / denominator);
+        if (gamepad1.dpad_down) {
+            armMotor.setPower(-1.0);
+        }
+        else if (gamepad1.dpad_up) {
+            armMotor.setPower(1.0);
+        } else if (gamepad1.dpad_right) {
+            armMotor.setPower(-1.0);
+            armMotor.setTargetPosition(0);
+        } else if (gamepad1.dpad_left) {
+            armMotor.setPower(1.0);
+            armMotor.setTargetPosition(0);
+        }
     }
 }
